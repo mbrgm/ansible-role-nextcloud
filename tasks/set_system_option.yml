@@ -1,0 +1,32 @@
+---
+- import_tasks: get_config.yml
+
+- set_fact:
+    values_differ: "{{ nextcloud_config.system[key] is not defined or nextcloud_config.system[key] != value }}"
+  changed_when: False
+
+- name: set_single_value
+  become: True
+  become_user: "{{ www_user }}"
+  command: >-
+    php "{{ nextcloud_webroot }}/occ" config:system:set "{{ key }}" --value "{{ value }}"
+  when: values_differ and not (value | type_debug == 'list')
+
+# First clear the array. If we don't do this and there are less new entries than
+# old entries, some old entries will remain ath the end of the array
+- name: clear_array
+  become: True
+  become_user: "{{ www_user }}"
+  command: >-
+    php "{{ nextcloud_webroot }}/occ" config:system:delete "{{ key }}"
+  with_indexed_items: "{{ value }}"
+  when: values_differ and (value | type_debug == 'list')
+
+- name: set_array_value
+  become: True
+  become_user: "{{ www_user }}"
+  command: >-
+    php "{{ nextcloud_webroot }}/occ" config:system:set "{{ key }}" "{{ item.0 }}" --value "{{ item.1 }}"
+  with_indexed_items: "{{ value }}"
+  when: values_differ and (value | type_debug == 'list')
+

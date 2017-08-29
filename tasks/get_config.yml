@@ -1,0 +1,14 @@
+---
+- name: get_config
+  become: True
+  become_user: "{{ www_user }}"
+  command: >-
+    php "{{ nextcloud_webroot }}/occ" config:list
+  register: nextcloud_config_cmd
+  changed_when: False
+  when: nextcloud_config is not defined
+
+- set_fact:
+    nextcloud_config: "{{ nextcloud_config_cmd.stdout | from_json }}"
+  when: nextcloud_config is not defined
+

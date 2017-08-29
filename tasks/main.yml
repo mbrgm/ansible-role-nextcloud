@@ -1,0 +1,77 @@
+---
+- name: install_dependencies
+  package:
+    name: "{{ ','.join(nextcloud_dependencies) }}"
+    state: latest
+
+- name: create_webroot
+  file:
+    path: "{{ nextcloud_webroot }}"
+    state: directory
+    owner: "{{ www_user }}"
+    group: "{{ www_group }}"
+
+- name: create_data_dir_owner
+  file:
+    path: "{{ nextcloud_data_dir }}"
+    state: directory
+    owner: "{{ www_user }}"
+    group: "{{ www_user }}"
+    mode: 0750
+
+- name: check_if_installed
+  become: True
+  become_user: "{{ www_user }}"
+  command: php "{{ nextcloud_webroot }}/occ" config:system:get installed
+  register: installed
+  ignore_errors: True
+  changed_when: False
+
+- name: get_source
+  unarchive:
+    src: "{{ nextcloud_download_url }}"
+    dest: "{{ nextcloud_webroot }}"
+    owner: "{{ www_user }}"
+    group: "{{ www_group }}"
+    remote_src: True
+    extra_opts: "--strip-components=1"
+    creates: "{{ nextcloud_webroot }}/version.php"
+  when: installed.failed or installed.stdout != "true"
+  notify: set_webroot_permissions
+
+- import_tasks: setup_db.yml
+
+- name: install
+  become: True
+  become_user: "{{ www_user }}"
+  command: >-
+    php "{{ nextcloud_webroot }}/occ" maintenance:install
+      --database "pgsql"
+      --database-name "{{ nextcloud_db_name }}"
+      --database-user "{{ nextcloud_db_user }}"
+      --database-pass "{{ nextcloud_db_pass }}"
+      --admin-user "{{ nextcloud_admin_user }}"
+      --admin-pass "{{ nextcloud_admin_pass }}"
+      --data-dir "{{ nextcloud_data_dir }}"
+  when: installed.failed or installed.stdout != "true"
+
+- import_tasks: setup_apps.yml
+  tags: apps
+
+- import_tasks: settings.yml
+  tags: settings
+
+- name: setup_cron_job
+  cron:
+    name: nextcloud-cron
+    user: "{{ www_user }}"
+    minute: "*/15"
+    job: php -f {{ nextcloud_webroot }}/cron.php
+
+- name: setup_nginx_site
+  template:
+    src: nginx
+    dest: /etc/nginx/sites-enabled/{{ nextcloud_url }}
+    mode: 0600
+  notify: reload_nginx
+  tags: nginx

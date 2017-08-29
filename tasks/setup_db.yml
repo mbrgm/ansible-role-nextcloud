@@ -1,0 +1,17 @@
+---
+- name: setup_db_user
+  postgresql_user:
+    name: "{{ nextcloud_db_user }}"
+    password: "{{ nextcloud_db_pass }}"
+    encrypted: True
+  become: True
+  become_user: postgres
+
+- name: setup_db
+  postgresql_db:
+    name: "{{ nextcloud_db_name }}"
+    owner: "{{ nextcloud_db_user }}"
+    template: template0
+    encoding: UNICODE
+  become: True
+  become_user: postgres

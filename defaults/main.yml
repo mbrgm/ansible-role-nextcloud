@@ -1,0 +1,24 @@
+---
+nextcloud_data_dir: /var/lib/nextcloud/data
+nextcloud_db_name: nextcloud
+nextcloud_db_user: nextcloud
+nextcloud_max_upload_size: 5G
+nextcloud_php_sock: /var/run/php/php7.0-fpm-www.sock
+nextcloud_webroot: /var/www/{{ nextcloud_url }}
+
+nextcloud_enabled_apps: []
+nextcloud_disabled_apps: []
+nextcloud_external_apps: []
+
+nextcloud_default_app_options:
+  core:
+    backgroundjobs_mode: cron
+
+nextcloud_default_system_options:
+  mail_from_address: no-reply
+  mail_domain: "{{ nextcloud_url }}"
+  memcache.local: "\\OC\\Memcache\\APCu"
+  trusted_domains:
+    - localhost
+    - "{{ nextcloud_url }}"
+

@@ -1,0 +1,9 @@
+---
+- include_tasks: set_app_option.yml
+  vars:
+    key:  "{{ option_item.key }}"
+    value: "{{ option_item.value }}"
+  with_dict: "{{ options }}"
+  loop_control:
+    loop_var: option_item
+

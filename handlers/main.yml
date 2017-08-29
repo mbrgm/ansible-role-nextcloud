@@ -1,0 +1,6 @@
+---
+- name: set_webroot_permissions
+  shell: >
+    find "{{ nextcloud_webroot }}" -type d -exec chmod 0750 {} \;;
+    find "{{ nextcloud_webroot }}" -type f -exec chmod 0640 {} \;;
+

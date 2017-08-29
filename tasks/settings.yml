@@ -1,0 +1,17 @@
+---
+- include_tasks: set_system_option.yml
+  vars:
+    key: "{{ outer_item.key }}"
+    value: "{{ outer_item.value }}"
+  with_dict: "{{ nextcloud_combined_system_options }}"
+  loop_control:
+    loop_var: outer_item
+
+- include_tasks: set_options_for_app.yml
+  vars:
+    app: "{{ app_item.key }}"
+    options: "{{ app_item.value }}"
+  with_dict: "{{ nextcloud_combined_app_options }}"
+  loop_control:
+    loop_var: app_item
+
