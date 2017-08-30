@@ -3,7 +3,6 @@ nextcloud_data_dir: /var/lib/nextcloud/data
 nextcloud_db_name: nextcloud
 nextcloud_db_user: nextcloud
 nextcloud_max_upload_size: 5G
-nextcloud_php_sock: /var/run/php/php7.0-fpm-www.sock
 nextcloud_webroot: /var/www/{{ nextcloud_url }}
 
 nextcloud_enabled_apps: []
