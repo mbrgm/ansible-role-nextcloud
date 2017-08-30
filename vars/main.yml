@@ -1,7 +1,6 @@
 ---
 nextcloud_combined_options: "{{ nextcloud_default_options | combine((nextcloud_options | default({})), recursive=True) }}"
 nextcloud_download_url: https://download.nextcloud.com/server/releases/nextcloud-12.0.2.tar.bz2
-nextcloud_max_upload_size: 5G
 nextcloud_dependencies:
   - php-curl
   - php-gd
@@ -14,4 +13,3 @@ nextcloud_enabled_apps_combined: "{{ nextcloud_enabled_apps + (nextcloud_externa
 
 nextcloud_combined_app_options: "{{ nextcloud_default_app_options | combine((nextcloud_app_options | default({})), recursive=True) }}"
 nextcloud_combined_system_options: "{{ nextcloud_default_system_options | combine((nextcloud_system_options | default({})), recursive=True) }}"
-
