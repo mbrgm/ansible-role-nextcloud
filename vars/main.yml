@@ -9,6 +9,11 @@ nextcloud_dependencies:
   - php-xml
   - php-zip
 
+nextcloud_hsts_header_params: >-
+  max-age={{ nextcloud_hsts_max_age_secs }};
+  {{ 'includeSubDomains;' if nextcloud_hsts_include_subdomains else '' }}
+  {{ 'preload;' if nextcloud_hsts_preload else '' }}
+
 nextcloud_enabled_apps_combined: "{{ nextcloud_enabled_apps + (nextcloud_external_apps | map(attribute='name') | list) }}"
 
 nextcloud_combined_app_options: "{{ nextcloud_default_app_options | combine((nextcloud_app_options | default({})), recursive=True) }}"

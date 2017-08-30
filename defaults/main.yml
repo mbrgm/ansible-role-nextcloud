@@ -2,6 +2,11 @@
 nextcloud_data_dir: /var/lib/nextcloud/data
 nextcloud_db_name: nextcloud
 nextcloud_db_user: nextcloud
+
+nextcloud_hsts_max_age_secs: 0
+nextcloud_hsts_include_subdomains: False
+nextcloud_hsts_preload: False
+
 nextcloud_max_upload_size: 5G
 nextcloud_webroot: /var/www/{{ nextcloud_url }}
 
@@ -20,4 +25,3 @@ nextcloud_default_system_options:
   trusted_domains:
     - localhost
     - "{{ nextcloud_url }}"
-
