@@ -11,7 +11,7 @@
     owner: "{{ www_user }}"
     group: "{{ www_group }}"
 
-- name: create_data_dir_owner
+- name: create_data_dir
   file:
     path: "{{ nextcloud_data_dir }}"
     state: directory
