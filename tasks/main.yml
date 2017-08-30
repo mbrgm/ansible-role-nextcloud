@@ -26,6 +26,7 @@
   register: installed
   ignore_errors: True
   changed_when: False
+  check_mode: False
 
 - name: get_source
   unarchive:

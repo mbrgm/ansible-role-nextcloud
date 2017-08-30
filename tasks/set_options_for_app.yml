@@ -6,4 +6,3 @@
   with_dict: "{{ options }}"
   loop_control:
     loop_var: option_item
-

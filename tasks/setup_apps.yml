@@ -27,4 +27,3 @@
     php "{{ nextcloud_webroot }}/occ" app:disable {{ item }}
   when: nextcloud_config.apps[item] is defined and nextcloud_config.apps[item]['enabled'] == "yes"
   with_items: "{{ nextcloud_disabled_apps }}"
-

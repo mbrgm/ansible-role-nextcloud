@@ -7,8 +7,9 @@
   register: nextcloud_config_cmd
   changed_when: False
   when: nextcloud_config is not defined
+  check_mode: no
 
 - set_fact:
     nextcloud_config: "{{ nextcloud_config_cmd.stdout | from_json }}"
   when: nextcloud_config is not defined
-
+  check_mode: no

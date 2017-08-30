@@ -4,6 +4,7 @@
 - set_fact:
     values_differ: "{{ nextcloud_config.apps[app][key] is not defined or nextcloud_config.apps[app][key] != value }}"
   changed_when: False
+  check_mode: no
 
 - name: set_single_value
   become: True
@@ -29,4 +30,3 @@
     php "{{ nextcloud_webroot }}/occ" config:app:set "{{ app }}" "{{ key }}" "{{ item.0 }}" --value "{{ item.1 }}"
   with_indexed_items: "{{ value }}"
   when: values_differ and (value | type_debug == 'list')
-
