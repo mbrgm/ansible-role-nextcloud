@@ -56,6 +56,27 @@
       --data-dir "{{ nextcloud_data_dir }}"
   when: installed.failed or installed.stdout != "true"
 
+- name: configure_db_name
+  lineinfile:
+    path: "{{ nextcloud_webroot }}/config/config.php"
+    regexp: "^\\s* 'dbname' =>.*"
+    line: "  'dbname' => '{{ nextcloud_db_name }}',"
+    insertafter: "^\\s* 'version' =>.*"
+
+- name: configure_db_user
+  lineinfile:
+    path: "{{ nextcloud_webroot }}/config/config.php"
+    regexp: "^\\s* 'dbuser' =>.*"
+    line: "  'dbuser' => '{{ nextcloud_db_user }}',"
+    insertafter: "^\\s* 'dbtableprefix' =>.*"
+
+- name: configure_db_pass
+  lineinfile:
+    path: "{{ nextcloud_webroot }}/config/config.php"
+    regexp: "^\\s* 'dbpassword' =>.*"
+    line: "  'dbpassword' => '{{ nextcloud_db_pass }}',"
+    insertafter: "^\\s* 'dbuser' =>.*"
+
 - import_tasks: setup_apps.yml
   tags: apps
 
