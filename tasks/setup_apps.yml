@@ -1,6 +1,4 @@
 ---
-- import_tasks: get_config.yml
-
 - name: download_external_app
   unarchive:
     src: "{{ item.url }}"
@@ -12,12 +10,14 @@
   notify: set_webroot_permissions
   with_items: "{{ nextcloud_external_apps }}"
 
+- import_tasks: get_config.yml
+
 - name: enable_app
   become: True
   become_user: "{{ www_user }}"
   command: >-
     php "{{ nextcloud_webroot }}/occ" app:enable {{ item }}
-  when: nextcloud_config.apps[item] is defined and nextcloud_config.apps[item]['enabled'] == "no"
+  when: nextcloud_config.apps[item] is not defined or nextcloud_config.apps[item]['enabled'] == "no"
   with_items: "{{ nextcloud_enabled_apps_combined }}"
 
 - name: disable_app
